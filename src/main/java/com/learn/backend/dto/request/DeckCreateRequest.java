@@ -1,0 +1,32 @@
+package com.learn.backend.dto.request;
+
+import com.learn.backend.enums.Level;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.UUID;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class DeckCreateRequest {
+
+    @NotBlank
+    private String title;
+
+    @NotBlank
+    private String subject;
+
+    @NotNull
+    private Level level;
+
+    private String sourceFileRef;
+
+    @NotNull
+    private UUID ownerId;
+}
