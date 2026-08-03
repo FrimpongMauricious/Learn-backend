@@ -90,6 +90,7 @@ setup is needed the first time you point this at a fresh database.
 | Method | Path                                 | Description                                      |
 |--------|--------------------------------------|--------------------------------------------------|
 | POST   | `/api/users`                         | Register a new user                              |
+| POST   | `/api/users/login`                   | Log in with email + password                     |
 | GET    | `/api/users/{id}`                    | Fetch a user by id                               |
 | POST   | `/api/decks`                         | Create a new deck                                |
 | GET    | `/api/decks/{id}`                    | Fetch a deck                                     |
@@ -112,6 +113,26 @@ curl -X POST http://localhost:8080/api/users \
     "password": "hunter22"
   }'
 ```
+
+### Log in
+
+```bash
+curl -X POST http://localhost:8080/api/users/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "student@example.com",
+    "password": "hunter22"
+  }'
+```
+
+Returns `200 OK` with the same `UserResponse` shape as registration on success, or `401 Unauthorized` with
+`{"error": "Invalid credentials"}` if the email doesn't exist or the password is wrong — the response is
+identical in both cases so a client can't use it to enumerate registered emails. This endpoint is not JWT-based
+yet; it's a plain credential check for the upcoming React Native app, with token-based auth to follow in a
+later stage.
+
+> No schema change was needed for this endpoint — it only reads the existing `users` table — so a plain
+> restart/redeploy is enough; no migration step required.
 
 ### Create a deck
 

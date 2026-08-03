@@ -1,9 +1,11 @@
 package com.learn.backend.service;
 
+import com.learn.backend.dto.request.LoginRequest;
 import com.learn.backend.dto.request.UserRegisterRequest;
 import com.learn.backend.dto.response.UserResponse;
 import com.learn.backend.entity.User;
 import com.learn.backend.exception.DuplicateResourceException;
+import com.learn.backend.exception.InvalidCredentialsException;
 import com.learn.backend.exception.ResourceNotFoundException;
 import com.learn.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +45,18 @@ public class UserService {
     public UserResponse getById(UUID id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + id));
+        return toResponse(user);
+    }
+
+    @Transactional(readOnly = true)
+    public UserResponse login(LoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(InvalidCredentialsException::new);
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
+            throw new InvalidCredentialsException();
+        }
+
         return toResponse(user);
     }
 

@@ -1,5 +1,6 @@
 package com.learn.backend.controller;
 
+import com.learn.backend.dto.request.LoginRequest;
 import com.learn.backend.dto.request.UserRegisterRequest;
 import com.learn.backend.dto.response.UserResponse;
 import com.learn.backend.service.UserService;
@@ -27,5 +28,10 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(userService.getById(id));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UserResponse> login(@Valid @RequestBody LoginRequest request) {
+        return ResponseEntity.ok(userService.login(request));
     }
 }
